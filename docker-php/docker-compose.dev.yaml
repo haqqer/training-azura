@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  php-service:
+    container_name: d-php-service
+    build:
+      args:
+        user: haqqer
+        uid: 1000
+      context: .
+      dockerfile: ./dockerfiles/dockerfile.dev
+    image: d-php-image
+    working_dir: /var/www
+    volumes:
+      - ./service:/var/www
+  web_server:
+    container_name: d-php-server
+    image: nginx:alpine
+    ports:
+      - 8080:80
+    volumes:
+      - ./service:/var/www
+      - ./nginx/laravel.conf:/etc/nginx/conf.d/default.conf
+networks:
+  default:
+    external:
+      name: devnetwork
